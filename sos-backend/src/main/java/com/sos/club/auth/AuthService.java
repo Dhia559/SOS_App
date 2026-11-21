@@ -1,6 +1,7 @@
 package com.sos.club.auth;
 
 import com.sos.club.common.ApiException;
+import com.sos.club.common.Roles;
 import com.sos.club.security.JwtService;
 import com.sos.club.user.UserDto;
 import com.sos.club.user.UserRepository;
@@ -29,14 +30,20 @@ public class AuthService {
             if (r.roleId() == 0) throw ApiException.badRequest("roleId 0 (ALL) est reserve aux posts");
             if (!users.roleExists(r.roleId())) throw ApiException.badRequest("Role inconnu");
         }
-        if (r.clubId() != null) {
-            if (r.clubId() == 0) throw ApiException.badRequest("clubId 0 (ALL) est reserve aux posts");
-            if (!users.clubExists(r.clubId())) throw ApiException.badRequest("Club inconnu");
+        // Roles d'association : pas de club (ils appartiennent a tous les clubs).
+        // Roles de club : un club est obligatoire.
+        Integer clubId = Roles.isAssociation(r.roleId()) ? null : r.clubId();
+        if (r.roleId() != null && !Roles.isAssociation(r.roleId()) && clubId == null) {
+            throw ApiException.badRequest("Un club est obligatoire pour ce role");
+        }
+        if (clubId != null) {
+            if (clubId == 0) throw ApiException.badRequest("clubId 0 (ALL) est reserve aux posts");
+            if (!users.clubExists(clubId)) throw ApiException.badRequest("Club inconnu");
         }
         if (users.emailExists(email)) throw ApiException.conflict("Email deja utilise");
 
         int id = users.insert(r.firstName().trim(), r.lastName().trim(), email, encoder.encode(r.password()),
-                r.birthday(), r.sex(), r.roleId(), r.clubId());
+                r.birthday(), r.sex(), r.roleId(), clubId);
         return response(id, email);
     }
 

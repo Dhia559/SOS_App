@@ -1,6 +1,7 @@
 package com.sos.club.feed;
 
 import com.sos.club.common.ApiException;
+import com.sos.club.common.Roles;
 import com.sos.club.common.UserSummary;
 import com.sos.club.events.EventTypes;
 import com.sos.club.events.OutboxService;
@@ -31,11 +32,12 @@ public class PostService {
     }
 
     // Visibilite (guide section 03) : role du post = 0 ou celui du viewer, ET club = 0 ou celui du viewer.
-    // L'auteur voit toujours ses propres posts.
+    // Les roles d'association appartiennent a tous les clubs. L'auteur voit toujours ses propres posts.
     private static final String VISIBLE = """
-            ((p.visible_role_id IN (0, viewer.role_id) AND p.visible_club_id IN (0, viewer.club_id))
+            ((p.visible_role_id IN (0, viewer.role_id)
+              AND (p.visible_club_id IN (0, viewer.club_id) OR viewer.role_id IN (%s)))
              OR p.user_id = viewer.id)
-            """;
+            """.formatted(Roles.ASSOCIATION_IDS_SQL);
 
     private static final String POST_SELECT = """
             SELECT p.id, p.content, p.visible_role_id, p.visible_club_id, p.created_at,

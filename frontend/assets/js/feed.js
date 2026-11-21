@@ -147,44 +147,79 @@
       </div>`).join('');
 
     try {
-      const [friends, incoming, sent, users, myPosts] = await Promise.all([
+      const [friends, incoming, sent, myPosts] = await Promise.all([
         Api.get('/friends'),
         Api.get('/friends/requests'),
         Api.get('/friends/requests/sent'),
-        Api.get('/users?limit=50'),
         Api.get(`/users/${me.id}/posts?limit=100`),
       ]);
 
-      $('#stat-clubs').textContent = me.clubId ? 1 : 0;
+      $('#stat-clubs').textContent = me.allClubs ? 'Tous' : me.clubId ? 1 : 0;
       $('#stat-friends').textContent = friends.length;
       $('#stat-posts').textContent = myPosts.posts.length + (myPosts.nextBefore ? '+' : '');
 
-      const known = new Set([me.id, ...[...friends, ...incoming, ...sent].map((f) => f.user.id)]);
-      const requests = incoming.map((f) => personRow(AuthService.toUser(f.user), '<button class="join-btn" data-act="accept">Accepter</button>'));
-      const people = users
-        .filter((u) => u.active && !known.has(u.id))
-        .slice(0, Math.max(0, 4 - requests.length))
-        .map((u) => personRow(AuthService.toUser(u), '<button class="join-btn" data-act="add">Ajouter</button>'));
-
-      $('#suggestions').innerHTML = requests.concat(people).join('') || '<small>Aucune suggestion.</small>';
+      friends.forEach((f) => relation.set(f.user.id, 'friend'));
+      incoming.forEach((f) => relation.set(f.user.id, 'incoming'));
+      sent.forEach((f) => relation.set(f.user.id, 'sent'));
     } catch (err) {
-      $('#suggestions').innerHTML = `<small>${escapeHTML(err.message)}</small>`;
+      toast(err.message);
     }
+    loadPeople();
+  }
+
+  /* ---------- People: every member, searchable ---------- */
+  const relation = new Map(); // userId -> 'friend' | 'incoming' | 'sent'
+  const ACTION = {
+    incoming: '<button class="join-btn" data-act="accept">Accepter</button>',
+    sent: '<button class="join-btn is-joined" disabled>Envoyée ✓</button>',
+    friend: '<button class="join-btn is-joined" disabled>Ami ✓</button>',
+    none: '<button class="join-btn" data-act="add">Ajouter</button>',
+  };
+  const ORDER = { incoming: 0, none: 1, sent: 2, friend: 3 };
+  let peopleQuery = '';
+
+  async function loadPeople() {
+    const q = peopleQuery;
+    const list = $('#suggestions');
+    try {
+      const users = await Api.get(`/users?limit=100${q ? '&search=' + encodeURIComponent(q) : ''}`);
+      if (q !== peopleQuery) return; // a newer search is running
+      const people = users
+        .filter((u) => u.id !== me.id)
+        .map((u) => ({ u: AuthService.toUser(u), rel: relation.get(u.id) || 'none' }))
+        .sort((a, b) => ORDER[a.rel] - ORDER[b.rel]);
+      $('#people-count').textContent = people.length;
+      list.innerHTML = people.length
+        ? people.map(({ u, rel }) => personRow(u, ACTION[rel])).join('')
+        : `<small>${q ? 'Aucun membre ne correspond.' : 'Aucun autre membre.'}</small>`;
+    } catch (err) {
+      list.innerHTML = `<small>${escapeHTML(err.message)}</small>`;
+    }
+  }
+
+  function initPeopleSearch() {
+    let t;
+    $('#people-search').addEventListener('input', (e) => {
+      clearTimeout(t);
+      t = setTimeout(() => { peopleQuery = e.target.value.trim(); loadPeople(); }, 250);
+    });
   }
 
   async function onSuggestionClick(e) {
     const b = e.target.closest('.join-btn');
     if (!b || b.disabled) return;
-    const userId = b.closest('[data-user]').dataset.user;
+    const userId = Number(b.closest('[data-user]').dataset.user);
     b.disabled = true;
     try {
       if (b.dataset.act === 'accept') {
         await Api.post(`/friends/${userId}/accept`);
+        relation.set(userId, 'friend');
         b.textContent = 'Ami ✓';
         const n = $('#stat-friends');
         n.textContent = Number(n.textContent) + 1;
       } else {
         const f = await Api.post(`/friends/${userId}`);
+        relation.set(userId, f.status === 'accepted' ? 'friend' : 'sent');
         b.textContent = f.status === 'accepted' ? 'Ami ✓' : 'Envoyée ✓';
       }
       b.classList.add('is-joined');
@@ -366,5 +401,6 @@
     $('#posts').addEventListener('click', onPostClick);
     $('#posts').addEventListener('submit', onCommentSubmit);
     $('#suggestions').addEventListener('click', onSuggestionClick);
+    initPeopleSearch();
   });
 })();

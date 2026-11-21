@@ -27,6 +27,15 @@
 
 .club-row { display: flex; align-items: center; gap: .8rem; padding: .55rem; margin: 0 -.55rem; border-radius: 14px; transition: background .3s; }
 .club-row:hover { background: var(--pale); }
+
+/* People panel: search + scrollable list of every member */
+.people-count { min-width: 24px; padding: .15rem .5rem; border-radius: var(--r-pill); background: var(--pale); color: var(--navy-70); font-size: .75rem; font-weight: 800; text-align: center; }
+.people-count:empty { display: none; }
+.people-search { display: flex; align-items: center; gap: .5rem; padding: .6rem .85rem; margin-bottom: .7rem; border-radius: var(--r-pill); background: var(--pale); color: var(--navy-50); transition: box-shadow .3s, background .3s; }
+.people-search:focus-within { background: var(--white); box-shadow: inset 0 0 0 2px var(--cyan); }
+.people-search svg { width: 16px; flex-shrink: 0; }
+.people-search input { flex: 1; min-width: 0; border: 0; background: none; outline: none; font: inherit; font-size: .86rem; font-weight: 600; color: var(--navy); }
+.people-list { max-height: 360px; overflow-y: auto; padding: 0 .55rem; margin: 0 -.55rem; scrollbar-width: thin; }
 .club-row .avatar { border-radius: 12px; width: 40px; height: 40px; }
 .club-row div { flex: 1; min-width: 0; }
 .club-row strong { display: block; font-size: .92rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }

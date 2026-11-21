@@ -1,5 +1,6 @@
 package com.sos.club.notification;
 
+import com.sos.club.common.Roles;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -61,11 +62,11 @@ public class NotificationService {
                     SELECT :t, :c, :author, u.id FROM users u
                     WHERE u.is_active
                       AND (:role = 0 OR u.role_id = :role)
-                      AND (:club = 0 OR u.club_id = :club)
+                      AND (:club = 0 OR u.club_id = :club OR u.role_id IN (%s))
                       AND u.id <> :author
                     RETURNING *
                 )
-                """ + RETURN_WITH_NAME, p, MAPPER);
+                """.formatted(Roles.ASSOCIATION_IDS_SQL) + RETURN_WITH_NAME, p, MAPPER);
     }
 
     // ---------- Lecture (client) ----------

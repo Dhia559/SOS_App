@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Feed — SOS Network</title>
   <meta name="description" content="Le fil d'actualité de vos clubs et associations." />
+  <link rel="icon" type="image/jpeg" href="assets/img/logo.jpg" />
   <meta name="theme-color" content="#EFFAFF" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -106,8 +107,13 @@
       </section>
 
       <section class="panel side-block" data-reveal style="--d:.25s">
-        <div class="side-title"><h4>Personnes à connaître</h4></div>
-        <div id="suggestions"></div>
+        <div class="side-title"><h4>Personnes à connaître</h4><small class="people-count" id="people-count"></small></div>
+        <label class="people-search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+          <span class="sr-only">Rechercher un membre</span>
+          <input type="search" id="people-search" placeholder="Rechercher un membre…" autocomplete="off" />
+        </label>
+        <div class="people-list" id="suggestions"></div>
       </section>
 
       <section class="promo" data-reveal style="--d:.35s">

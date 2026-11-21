@@ -18,6 +18,9 @@ const AuthService = (() => {
 
   const TONES = ['cyan', 'coral', 'navy', 'light'];
 
+  /** Association roles have no club: they belong to every club. */
+  const isAssociation = (roleId) => roleId === 1 || roleId === 2;
+
   /** The backend sends roleId on full users but only roleName on short ones (post authors, friends...). */
   const roleIdOf = (u) => u.roleId ?? Number(Object.keys(ROLES).find((id) => ROLES[id].name === u.roleName)) ?? null;
 
@@ -25,6 +28,7 @@ const AuthService = (() => {
   function toUser(u) {
     if (!u) return null;
     const roleId = roleIdOf(u) || null;
+    const allClubs = isAssociation(roleId);
     return {
       id: u.id,
       firstName: u.firstName,
@@ -33,8 +37,9 @@ const AuthService = (() => {
       email: u.email,
       roleId,
       roleName: roleId ? ROLES[roleId].label : (u.roleName || ''),
-      clubId: u.clubId ?? null,
-      clubName: u.clubName || '',
+      allClubs,
+      clubId: allClubs ? null : (u.clubId ?? null),
+      clubName: allClubs ? 'Tous les clubs' : (u.clubName || ''),
       tone: TONES[u.id % TONES.length],
     };
   }
@@ -75,5 +80,5 @@ const AuthService = (() => {
     } catch (_) { return null; }
   }
 
-  return { ROLES, toUser, login, register, logout, getToken, getUser };
+  return { ROLES, isAssociation, toUser, login, register, logout, getToken, getUser };
 })();

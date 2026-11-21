@@ -133,12 +133,9 @@ button { font: inherit; color: inherit; }
 
 .logo { display: inline-flex; align-items: center; gap: .6rem; font-family: var(--font-display); font-weight: 700; font-size: 1.15rem; letter-spacing: -.02em; }
 .logo-mark {
-  position: relative; width: 36px; height: 36px; border-radius: 12px; overflow: hidden;
-  background: linear-gradient(135deg, var(--cyan), var(--navy));
+  width: 36px; height: 36px; border-radius: 10px; flex-shrink: 0;
+  background: #1ba1e2 url("../img/logo.jpg") center / cover no-repeat;
 }
-.logo-mark::before, .logo-mark::after { content: ""; position: absolute; border-radius: 50%; }
-.logo-mark::before { width: 18px; height: 18px; background: var(--white); left: 6px; top: 9px; }
-.logo-mark::after { width: 10px; height: 10px; background: var(--coral); right: 5px; bottom: 6px; }
 
 .nav-links { position: relative; display: flex; align-items: center; gap: .2rem; padding: .3rem; border-radius: var(--r-pill); }
 .nav-links a {

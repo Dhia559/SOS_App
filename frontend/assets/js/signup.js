@@ -39,6 +39,8 @@
     function goToForm() {
       if (!roleId) return;
       const meta = AuthService.ROLES[roleId];
+      // Association roles belong to every club: no club to choose
+      $('[data-field="clubId"]').hidden = AuthService.isAssociation(roleId);
       $('#role-pill-label').textContent = meta.label;
       pill.style.setProperty('--pill-color', meta.color);
       pill.style.setProperty('--pill-soft', meta.soft);
@@ -80,7 +82,7 @@
         lastName: !p.lastName && 'Le nom est requis.',
         email: !p.email ? "L'e-mail est requis." : !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(p.email) && 'Adresse e-mail invalide.',
         password: !p.password ? 'Le mot de passe est requis.' : p.password.length < 6 && '6 caractères minimum.',
-        clubId: !p.clubId && 'Choisissez votre club.',
+        clubId: !p.clubId && !AuthService.isAssociation(p.roleId) && 'Choisissez votre club.',
       };
       Object.entries(errors).forEach(([k, msg]) => setFieldError(k, msg || ''));
       return Object.values(errors).every((m) => !m);
@@ -108,7 +110,7 @@
         email: $('#email').value.trim(),
         password: $('#password').value,
         roleId,
-        clubId: Number($('#clubId').value) || null,
+        clubId: AuthService.isAssociation(roleId) ? null : Number($('#clubId').value) || null,
       };
       if (!validate(payload)) return;
 

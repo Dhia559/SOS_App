@@ -1,12 +1,14 @@
 /**
  * Api — thin fetch() wrapper for the SOS backend (Spring Boot).
- *  - base URL: window.SOS_API_URL if set, otherwise http://localhost:8080
+ *  - base URL: window.SOS_API_URL if set, otherwise port 8080 on the machine that served the page
+ *    (http://172.16.x.x:3000 -> http://172.16.x.x:8080, http://localhost:3000 -> http://localhost:8080)
  *  - sends "Authorization: Bearer <token>" when logged in
  *  - throws an Error carrying the backend's { message } and the HTTP status
  *  - on 401 (expired/invalid token) clears the session and goes back to login
  */
 const Api = (() => {
-  const BASE = (window.SOS_API_URL || 'http://localhost:8080').replace(/\/$/, '');
+  const host = location.hostname || 'localhost'; // empty when the page is opened as a file
+  const BASE = (window.SOS_API_URL || `http://${host}:8080`).replace(/\/$/, '');
   const API_URL = BASE + '/api';
   const WS_URL = BASE.replace(/^http/, 'ws') + '/ws';
 

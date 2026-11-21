@@ -5,9 +5,9 @@
 const MockData = (() => {
   // "À venir" panel on the feed: the backend has no events/calendar endpoint.
   const EVENTS = [
-    { day: '24', month: 'NOV', title: 'Workshop Git & GitHub', club: 'ISIMM' },
-    { day: '28', month: 'NOV', title: 'Assemblée générale', club: 'FSM' },
-    { day: '12', month: 'DÉC', title: 'Hackathon 48h', club: 'ENIM' },
+    { day: '28', month: 'NOV', title: 'Assemblée générale', club: 'Association SOS' },
+    { day: '05', month: 'DÉC', title: 'Journée du bénévolat', club: 'Village SOS · Tous les clubs' },
+    { day: '14', month: 'DÉC', title: 'Collecte de jouets', club: 'Village SOS · Tous les clubs' },
   ];
 
   return { EVENTS };
