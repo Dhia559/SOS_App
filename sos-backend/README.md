@@ -110,6 +110,8 @@ Chaque post : `id, content, author{id,firstName,lastName,roleName,clubName}, vis
 | GET | /api/conversations/{id} | |
 | GET | /api/conversations/{id}/messages?before=&limit= | ordre chronologique ; `before` = id du plus ancien message |
 | POST | /api/conversations/{id}/messages | `{content}` → event message.sent + push WS |
+| PUT | /api/conversations/{id}/messages/{messageId} | `{content}` → auteur seulement ; push WS `/user/queue/messages.updated` |
+| DELETE | /api/conversations/{id}/messages/{messageId} | auteur seulement ; push WS `/user/queue/messages.deleted` `{conversationId, messageId}` |
 | PUT | /api/conversations/{id}/read | marque les messages recus comme lus |
 
 ### Notifications
@@ -132,6 +134,7 @@ Chaque post : `id, content, author{id,firstName,lastName,roleName,clubName}, vis
   - `/user/queue/notifications` (nouvelle notification)
   - `/user/queue/notifications.count` (`{count}`)
   - `/user/queue/messages` (nouveau message, pour les 2 participants)
+  - `/user/queue/messages.updated` / `/user/queue/messages.deleted` (message modifie / supprime)
   - `/user/queue/read` (accuse de lecture)
   - `/user/queue/errors`
 - Envoyer : `/app/chat.send` `{conversationId, content}` · `/app/chat.read` `{conversationId}`

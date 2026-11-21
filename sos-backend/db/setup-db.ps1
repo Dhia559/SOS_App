@@ -17,9 +17,11 @@ foreach ($line in Get-Content $envFile) {
     $cfg[$k.Trim()] = $v.Trim()
 }
 
-$psqlDir = "C:\Program Files\PostgreSQL\18\bin"
-$psql = Join-Path $psqlDir "psql.exe"
-if (-not (Test-Path $psql)) { $psql = "psql" }
+# psql du PostgreSQL installe le plus recent (C:\Program Files\PostgreSQL\<version>\bin), sinon celui du PATH
+$psql = Get-ChildItem "C:\Program Files\PostgreSQL\*\bin\psql.exe" -ErrorAction SilentlyContinue |
+    Sort-Object { [int]$_.Directory.Parent.Name } -Descending |
+    Select-Object -First 1 -ExpandProperty FullName
+if (-not $psql) { $psql = "psql" }
 
 $dbHost = if ($cfg["DB_HOST"]) { $cfg["DB_HOST"] } else { "localhost" }
 $dbPort = if ($cfg["DB_PORT"]) { $cfg["DB_PORT"] } else { "5432" }

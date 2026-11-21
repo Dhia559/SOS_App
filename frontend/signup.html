@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Inscription — SOS Network</title>
+  <meta name="description" content="Créez votre compte SOS Network : choisissez votre rôle et votre club." />
+  <meta name="theme-color" content="#1D3768" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <link rel="stylesheet" href="assets/css/login.css" />
+</head>
+<body class="auth">
+  <div class="auth-layout">
+
+    <!-- ===== Visual side ===== -->
+    <aside class="auth-visual grain" aria-hidden="true">
+      <div class="blob v1"></div>
+      <div class="blob v2"></div>
+      <div class="blob v3"></div>
+      <div class="auth-rings"><span></span><span></span><span></span><i class="o1"></i><i class="o2"></i></div>
+
+      <a href="index.html" class="logo"><span class="logo-mark"></span>SOS Network</a>
+
+      <h2 class="auth-visual-title split" style="--d:.2s">Rejoignez <span class="thin">le</span><br><span class="hl">réseau</span><span class="dot">.</span></h2>
+
+      <div class="auth-visual-foot">
+        <p data-reveal style="--d:.8s">Clubs, associations, annonces et messages privés : toute la communauté SOS au même endroit.</p>
+        <div class="mini-stack" data-reveal style="--d:1s">
+          <div class="stack"><span class="avatar" data-tone="coral">ST</span><span class="avatar" data-tone="light">KB</span><span class="avatar">AB</span></div>
+          +1 200
+        </div>
+      </div>
+    </aside>
+
+    <!-- ===== Form side ===== -->
+    <main class="auth-main">
+      <div class="auth-box">
+        <div class="progress-dots" aria-hidden="true"><i class="on"></i><i></i></div>
+
+        <!-- STEP 1: role -->
+        <section class="step is-active" id="step-role" aria-labelledby="t-role">
+          <a href="login.html" class="back-link">← Connexion</a>
+          <h1 id="t-role">Quel est votre rôle ?</h1>
+          <p class="subtitle">Il décide de qui voit vos publications et des annonces que vous recevez.</p>
+
+          <div class="roles-pick" role="radiogroup" aria-labelledby="t-role">
+            <button type="button" class="role" data-role="1" role="radio" aria-checked="false">
+              <span class="role-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg></span>
+              <span class="role-text"><strong>Président d'association</strong><span>Pilotez votre association</span></span>
+              <span class="role-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span>
+            </button>
+            <button type="button" class="role" data-role="2" role="radio" aria-checked="false">
+              <span class="role-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21.2l8.8-8.8a5.5 5.5 0 0 0 0-7.8z"/></svg></span>
+              <span class="role-text"><strong>Membre d'association</strong><span>Projets et actions de votre association</span></span>
+              <span class="role-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span>
+            </button>
+            <button type="button" class="role" data-role="3" role="radio" aria-checked="false">
+              <span class="role-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"/></svg></span>
+              <span class="role-text"><strong>Président de club</strong><span>Animez et administrez votre club</span></span>
+              <span class="role-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span>
+            </button>
+            <button type="button" class="role" data-role="4" role="radio" aria-checked="false">
+              <span class="role-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1"/></svg></span>
+              <span class="role-text"><strong>Membre de club</strong><span>Activités et actualité de votre club</span></span>
+              <span class="role-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span>
+            </button>
+          </div>
+
+          <button type="button" class="btn btn-primary btn-block" id="btn-continue" disabled>Continuer
+            <svg class="arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </button>
+          <p class="switch-auth">Déjà membre ? <a href="login.html">Se connecter</a></p>
+        </section>
+
+        <!-- STEP 2: details -->
+        <section class="step" id="step-form" aria-labelledby="t-form">
+          <button type="button" class="back-link" id="btn-back">← Changer de rôle</button>
+          <h1 id="t-form">Inscription<span class="dot">.</span></h1>
+          <p class="subtitle">Quelques informations pour créer votre compte.</p>
+
+          <div class="role-pill" id="role-pill">
+            <span id="role-pill-label"></span>
+            <button type="button" id="btn-change-role">Changer</button>
+          </div>
+
+          <div class="alert" id="form-alert" role="alert"></div>
+
+          <form id="signup-form" novalidate>
+            <div class="field-pair">
+              <div class="field" data-field="firstName">
+                <input type="text" id="firstName" placeholder=" " autocomplete="given-name" maxlength="50" />
+                <label for="firstName">Prénom</label>
+                <div class="field-error"></div>
+              </div>
+              <div class="field" data-field="lastName">
+                <input type="text" id="lastName" placeholder=" " autocomplete="family-name" maxlength="50" />
+                <label for="lastName">Nom</label>
+                <div class="field-error"></div>
+              </div>
+            </div>
+            <div class="field" data-field="email">
+              <input type="email" id="email" placeholder=" " autocomplete="email" maxlength="255" />
+              <label for="email">Adresse e-mail</label>
+              <div class="field-error"></div>
+            </div>
+            <div class="field" data-field="password">
+              <input type="password" id="password" placeholder=" " autocomplete="new-password" maxlength="100" />
+              <label for="password">Mot de passe (6 caractères min.)</label>
+              <button type="button" class="toggle-pass" id="toggle-pass">Afficher</button>
+              <div class="field-error"></div>
+            </div>
+            <div class="field" data-field="clubId">
+              <select id="clubId"><option value="">Choisir un club…</option></select>
+              <label for="clubId">Club</label>
+              <div class="field-error"></div>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block" id="btn-submit">
+              <span class="spinner"></span>
+              <span class="btn-label">Créer mon compte</span>
+              <svg class="arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </button>
+          </form>
+          <p class="switch-auth">Déjà membre ? <a href="login.html">Se connecter</a></p>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script src="assets/js/core.js"></script>
+  <script src="assets/js/services/api.js"></script>
+  <script src="assets/js/services/auth.service.js"></script>
+  <script src="assets/js/signup.js"></script>
+</body>
+</html>

@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SOS Network — La vie de vos clubs, en un seul flux</title>
+  <meta name="description" content="SOS Network réunit clubs, associations et bureaux : fil d'actualité, messagerie en temps réel et gestion des membres." />
+  <meta name="theme-color" content="#08A9E0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <link rel="stylesheet" href="assets/css/home.css" />
+</head>
+<body>
+
+  <!-- ===== NAV ===== -->
+  <header class="nav" aria-label="Navigation principale">
+    <a href="index.html" class="logo" aria-label="SOS Network, accueil"><span class="logo-mark"></span>SOS Network</a>
+    <nav class="nav-links">
+      <span class="nav-indicator" aria-hidden="true"></span>
+      <a href="#manifeste">Manifeste</a>
+      <a href="#fonctionnalites">Fonctionnalités</a>
+      <a href="#profils">Profils</a>
+      <a href="feed.html">Feed</a>
+    </nav>
+    <div class="nav-actions">
+      <a href="login.html" class="btn btn-dark btn-sm hide-m" data-magnetic="0.25">Se connecter</a>
+      <button class="burger" aria-label="Menu" aria-expanded="false"><span></span><span></span></button>
+    </div>
+  </header>
+  <div class="mobile-menu" aria-hidden="true">
+    <a href="#manifeste">Manifeste</a>
+    <a href="#fonctionnalites">Fonctionnalités</a>
+    <a href="#profils">Profils</a>
+    <a href="feed.html">Feed</a>
+    <a href="login.html" class="hl">Se connecter →</a>
+    <p class="mm-foot">Clubs · Associations · Bureaux</p>
+  </div>
+
+  <main>
+    <!-- ===== HERO ===== -->
+    <section class="hero" id="top">
+      <div class="hero-bg" aria-hidden="true">
+        <div class="hero-grid-lines"></div>
+        <div class="blob b1"></div>
+        <div class="blob b2"></div>
+        <div class="blob b3"></div>
+      </div>
+
+      <div class="container">
+        <div class="hero-copy">
+          <span class="eyebrow" data-enter style="--d:.15s">Plateforme associative étudiante</span>
+          <h1 class="hero-title">
+            <span class="line split" style="--d:.25s">Vos clubs.</span>
+            <span class="line line--indent split thin" style="--d:.45s">Vos gens.</span>
+            <span class="line split" style="--d:.65s">Un seul <span class="flux keep">flux<svg class="flux-underline" viewBox="0 0 200 20" preserveAspectRatio="none" aria-hidden="true"><path d="M3 14 C 50 4, 120 4, 197 12"/></svg></span><span class="dot">.</span></span>
+          </h1>
+          <p class="hero-sub" data-enter style="--d:.9s">Publications, événements et conversations privées : tout ce qui fait vivre vos clubs et associations, enfin réuni au même endroit.</p>
+          <div class="hero-actions" data-enter style="--d:1.05s">
+            <a href="signup.html" class="btn btn-primary" data-magnetic>Rejoindre l'espace
+              <svg class="arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
+            <a href="#fonctionnalites" class="btn btn-ghost">Découvrir</a>
+          </div>
+          <div class="hero-proof" data-enter style="--d:1.2s">
+            <div class="stack" aria-hidden="true">
+              <span class="avatar">SG</span><span class="avatar" data-tone="coral">MB</span><span class="avatar" data-tone="light">AD</span><span class="avatar" data-tone="navy">IH</span>
+            </div>
+            <p><strong>1 200+ étudiants</strong> déjà connectés</p>
+          </div>
+        </div>
+
+        <div class="hero-visual" aria-hidden="true">
+          <div class="depth" data-depth="-14" style="position:absolute;inset:0">
+            <div class="orb" data-enter="pop" style="--d:.4s"></div>
+          </div>
+          <div class="depth" data-depth="-6" data-enter style="position:absolute;inset:0;--d:.7s">
+            <svg class="ring spin-slow" viewBox="0 0 540 540">
+              <defs><path id="circ" d="M270,270 m-240,0 a240,240 0 1,1 480,0 a240,240 0 1,1 -480,0"/></defs>
+              <text><textPath href="#circ">Clubs ✦ Associations ✦ Bureau ✦ Événements ✦ Messagerie ✦ Clubs ✦ Associations ✦ Bureau ✦</textPath></text>
+            </svg>
+          </div>
+          <div class="depth" data-depth="22" style="position:absolute;inset:0">
+            <span class="sphere sphere--coral float" data-enter="pop" style="--d:1s"></span>
+            <span class="sphere sphere--navy float float--rev" data-enter="pop" style="--d:1.1s"></span>
+            <span class="sphere sphere--light float float--slow" data-enter="pop" style="--d:1.2s"></span>
+          </div>
+          <div class="depth" data-depth="12" style="position:absolute;inset:0">
+            <div class="glass g-chat float float--slow" data-enter style="--d:1.1s">
+              <div class="row"><span class="avatar avatar--sm" data-tone="coral">SG</span><span class="bubble">On se retrouve au hackathon ?</span></div>
+              <span class="bubble me">Carrément 🙌</span>
+              <span class="typing"><i></i><i></i><i></i></span>
+            </div>
+            <div class="glass g-ticket float" data-enter style="--d:1.3s">
+              <div class="date"><b>12</b><small>DÉC</small></div>
+              <div><strong>Hackathon 48h</strong><span>Club Info · Amphi A</span></div>
+            </div>
+            <div class="glass g-like float float--rev" data-enter style="--d:1.45s">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-7.5-4.6-9.5-9.3C1.1 8.3 3.3 4.5 7 4.5c2 0 3.6 1.1 5 2.8 1.4-1.7 3-2.8 5-2.8 3.7 0 5.9 3.8 4.5 7.2C19.5 16.4 12 21 12 21z"/></svg>
+              <b>342</b>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <a href="#manifeste" class="hero-scroll"><span>Défiler</span><span class="line"></span></a>
+    </section>
+
+    <!-- ===== MARQUEE ===== -->
+    <div class="marquee-wrap" aria-hidden="true">
+      <div class="marquee">
+        <div class="marquee-track">
+          <span>Clubs <i class="star">✦</i> <em class="out">Associations</em> <i class="star">✦</i> Bureau <i class="star">✦</i> <em class="out">Événements</em> <i class="star">✦</i> Messagerie <i class="star">✦</i></span>
+          <span>Clubs <i class="star">✦</i> <em class="out">Associations</em> <i class="star">✦</i> Bureau <i class="star">✦</i> <em class="out">Événements</em> <i class="star">✦</i> Messagerie <i class="star">✦</i></span>
+        </div>
+      </div>
+      <div class="marquee marquee--alt">
+        <div class="marquee-track">
+          <span>Publier <i class="star">✦</i> Discuter <i class="star">✦</i> Organiser <i class="star">✦</i> Partager <i class="star">✦</i> Publier <i class="star">✦</i> Discuter <i class="star">✦</i></span>
+          <span>Publier <i class="star">✦</i> Discuter <i class="star">✦</i> Organiser <i class="star">✦</i> Partager <i class="star">✦</i> Publier <i class="star">✦</i> Discuter <i class="star">✦</i></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== MANIFESTO ===== -->
+    <section class="manifesto" id="manifeste">
+      <span class="deco-circle" data-parallax="-0.15" aria-hidden="true"></span>
+      <span class="deco-dots" aria-hidden="true"></span>
+      <div class="container">
+        <span class="eyebrow" data-reveal>Manifeste</span>
+        <div>
+          <p class="manifesto-text" id="manifesto-text">
+            La vie associative mérite mieux que des <span data-k="c">groupes éparpillés</span> et des annonces perdues. Nous avons imaginé un espace où chaque club, chaque <span data-k="k">association</span> et chaque bureau parle d'une seule voix, et où chaque membre trouve sa place.
+          </p>
+          <p class="manifesto-sign" data-reveal>L'équipe SOS Network</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== FEATURES ===== -->
+    <section class="features" id="fonctionnalites">
+      <div class="container">
+        <div class="features-head">
+          <span class="eyebrow" data-reveal>Fonctionnalités</span>
+          <h2 class="split">Tout ce qu'il faut. <span class="thin">Rien de trop.</span></h2>
+          <p data-reveal style="--d:.2s">Trois outils pensés pour la façon dont les clubs fonctionnent vraiment.</p>
+          <a href="feed.html" class="btn btn-dark" data-reveal style="--d:.3s" data-magnetic>Voir le feed
+            <svg class="arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+        </div>
+
+        <div class="features-list">
+          <article class="feature" data-reveal>
+            <span class="feature-num">01</span>
+            <div>
+              <h3>Un feed vivant</h3>
+              <p>Annonces, événements et moments forts de vos clubs, filtrés selon ce qui vous concerne.</p>
+            </div>
+            <div class="feature-visual mini mini-feed" aria-hidden="true">
+              <div class="mini-post"><span class="avatar avatar--sm"></span><div class="bars"><i></i><i></i></div><svg class="heart" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-7.5-4.6-9.5-9.3C1.1 8.3 3.3 4.5 7 4.5c2 0 3.6 1.1 5 2.8 1.4-1.7 3-2.8 5-2.8 3.7 0 5.9 3.8 4.5 7.2C19.5 16.4 12 21 12 21z"/></svg></div>
+              <div class="mini-post"><span class="avatar avatar--sm" data-tone="coral"></span><div class="bars"><i></i><i></i></div></div>
+            </div>
+          </article>
+
+          <article class="feature" data-reveal>
+            <span class="feature-num">02</span>
+            <div>
+              <h3>Messagerie instantanée</h3>
+              <p>Conversations privées en temps réel avec vos amis. Les messages vous attendent même hors ligne.</p>
+            </div>
+            <div class="feature-visual mini mini-chat" aria-hidden="true">
+              <span>Réunion à 18h ?</span>
+              <span class="me">Je serai là 👌</span>
+              <span>Parfait, j'apporte le PV.</span>
+            </div>
+          </article>
+
+          <article class="feature" data-reveal>
+            <span class="feature-num">03</span>
+            <div>
+              <h3>L'espace du bureau</h3>
+              <p>Membres, événements, annonces : le bureau pilote son club sans tableur ni chaos.</p>
+            </div>
+            <div class="feature-visual mini mini-board" aria-hidden="true">
+              <div class="tile"><b>124</b><small>membres actifs</small></div>
+              <div class="tile tile--c"><b>6</b><small>événements ce mois</small></div>
+              <div class="tile tile--n"><small style="color:var(--light)">Objectif recrutement</small><div class="progress"><i></i></div></div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== ROLES ===== -->
+    <section class="roles" id="profils">
+      <svg class="roles-wave" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true"><path fill="currentColor" d="M0,0 L1440,0 L1440,30 C1100,95 340,95 0,30 Z"/></svg>
+      <div class="container">
+        <div class="roles-head">
+          <div>
+            <span class="eyebrow" data-reveal>Profils</span>
+            <h2 class="split" style="margin-top:1.2rem">Un espace pour <span class="thin">chaque rôle.</span></h2>
+          </div>
+          <p data-reveal style="--d:.2s">Votre rôle, choisi à l'inscription, décide de qui voit vos publications et de ce que vous voyez.</p>
+        </div>
+
+        <div class="acc" data-reveal role="tablist">
+          <button class="acc-item is-open" data-accent="white" role="tab" aria-selected="true">
+            <span class="acc-num">01</span>
+            <span class="acc-label">Président d'association</span>
+            <span class="acc-shape"></span>
+            <div class="acc-body">
+              <h3>Président d'association</h3>
+              <p>Pilotez votre association : annonces officielles ciblées par rôle ou par club, et lien direct avec chaque membre.</p>
+              <ul><li>Annonces ciblées</li><li>Messagerie</li><li>Notifications</li></ul>
+            </div>
+          </button>
+          <button class="acc-item" data-accent="light" role="tab" aria-selected="false">
+            <span class="acc-num">02</span>
+            <span class="acc-label">Membre d'association</span>
+            <span class="acc-shape"></span>
+            <div class="acc-body">
+              <h3>Membre d'association</h3>
+              <p>Engagez-vous dans les actions de votre association et restez au courant de chaque projet.</p>
+              <ul><li>Projets</li><li>Bénévolat</li><li>Annonces</li></ul>
+            </div>
+          </button>
+          <button class="acc-item" data-accent="coral" role="tab" aria-selected="false">
+            <span class="acc-num">03</span>
+            <span class="acc-label">Président de club</span>
+            <span class="acc-shape"></span>
+            <div class="acc-body">
+              <h3>Président de club</h3>
+              <p>Animez votre club : publiez pour vos membres, organisez les événements et gardez le contact avec tous.</p>
+              <ul><li>Publications du club</li><li>Événements</li><li>Membres</li></ul>
+            </div>
+          </button>
+          <button class="acc-item" data-accent="cyan" role="tab" aria-selected="false">
+            <span class="acc-num">04</span>
+            <span class="acc-label">Membre de club</span>
+            <span class="acc-shape"></span>
+            <div class="acc-body">
+              <h3>Membre de club</h3>
+              <p>Suivez l'actualité de votre club, participez aux événements et échangez avec les autres membres.</p>
+              <ul><li>Feed personnalisé</li><li>Amis</li><li>Messagerie</li></ul>
+            </div>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== STATS ===== -->
+    <section class="stats grain">
+      <div class="container">
+        <h2 class="stats-title split">Une communauté qui grandit, <span class="thin">chaque semaine.</span></h2>
+        <div class="stat stat--1" data-reveal><b data-count="48">0</b><span>clubs et associations actifs</span></div>
+        <div class="stat stat--2" data-reveal style="--d:.15s"><b data-count="1200" data-suffix="+">0</b><span>étudiants connectés</span></div>
+        <div class="stat stat--3" data-reveal style="--d:.3s"><b data-count="96" data-suffix="%">0</b><span>des messages lus en moins d'une heure</span></div>
+      </div>
+    </section>
+
+    <!-- ===== CTA ===== -->
+    <section class="cta">
+      <span class="deco" data-parallax="0.12" aria-hidden="true"></span>
+      <div class="container">
+        <h2 class="split">Prêt à rejoindre <span class="thin">le</span> <span class="hl">mouvement</span><span class="dot">?</span></h2>
+        <a href="signup.html" class="cta-round" data-magnetic="0.4" data-reveal="scale">
+          <span>Rejoindre
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-top">
+        <a href="index.html" class="logo"><span class="logo-mark"></span>SOS Network</a>
+        <nav class="footer-links" aria-label="Liens du pied de page">
+          <a href="#manifeste">Manifeste</a>
+          <a href="#fonctionnalites">Fonctionnalités</a>
+          <a href="feed.html">Feed</a>
+          <a href="conversations.html">Messages</a>
+          <a href="login.html">Connexion</a>
+        </nav>
+      </div>
+      <div class="footer-bottom">
+        <span>© <span data-year></span> SOS Network</span>
+        <span>Fait pour la vie associative étudiante.</span>
+      </div>
+      <div class="footer-big" aria-hidden="true">SOS Network</div>
+    </div>
+  </footer>
+
+  <script src="assets/js/core.js"></script>
+  <script src="assets/js/home.js"></script>
+</body>
+</html>

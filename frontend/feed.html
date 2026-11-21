@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Feed — SOS Network</title>
+  <meta name="description" content="Le fil d'actualité de vos clubs et associations." />
+  <meta name="theme-color" content="#EFFAFF" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <link rel="stylesheet" href="assets/css/app.css" />
+  <link rel="stylesheet" href="assets/css/feed.css" />
+</head>
+<body class="app">
+
+  <!-- ===== NAV ===== -->
+  <header class="nav nav--solid" aria-label="Navigation principale">
+    <a href="index.html" class="logo"><span class="logo-mark"></span>SOS Network</a>
+    <nav class="nav-links">
+      <span class="nav-indicator" aria-hidden="true"></span>
+      <a href="feed.html" class="is-active" aria-current="page">Feed</a>
+      <a href="conversations.html">Messages<span class="badge" data-unread>3</span></a>
+    </nav>
+    <div class="nav-actions">
+      <label class="nav-search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+        <span class="sr-only">Rechercher</span>
+        <input type="search" id="search" placeholder="Rechercher un post…" />
+      </label>
+      <button class="me-btn" id="btn-logout" title="Se déconnecter">
+        <span class="me-name" data-me-first>Mehdi</span>
+        <span class="avatar" data-me-initials>MS</span>
+      </button>
+    </div>
+  </header>
+
+  <div class="feed-layout">
+    <!-- ===== LEFT ===== -->
+    <aside class="side side--left">
+      <section class="panel profile" data-reveal>
+        <div class="profile-banner"></div>
+        <div class="profile-body">
+          <span class="avatar avatar--lg" data-me-initials>MS</span>
+          <h3 data-me-name>Mehdi Saidi</h3>
+          <span class="chip" id="me-role">Membre du bureau</span>
+          <div class="profile-stats">
+            <div><b id="stat-clubs">–</b><small>Clubs</small></div>
+            <div><b id="stat-friends">–</b><small>Amis</small></div>
+            <div><b id="stat-posts">–</b><small>Posts</small></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel side-block" data-reveal style="--d:.1s">
+        <div class="side-title"><h4>Mes clubs</h4><a href="#">Tout voir</a></div>
+        <div id="my-clubs"></div>
+      </section>
+    </aside>
+
+    <!-- ===== CENTER ===== -->
+    <main>
+      <header class="feed-head">
+        <span class="eyebrow" data-reveal>Fil d'actualité</span>
+        <h1 class="split" id="greeting">Bonjour, <span class="hl" data-me-first>Mehdi</span><span class="dot">.</span> <span class="thin">Quoi de neuf ?</span></h1>
+        <div class="tabs" role="tablist" aria-label="Filtrer les publications" data-reveal style="--d:.3s">
+          <span class="tab-ind" aria-hidden="true"></span>
+          <button role="tab" class="is-active" data-filter="all" aria-selected="true">Tout</button>
+          <button role="tab" data-filter="1" aria-selected="false">Prés. asso</button>
+          <button role="tab" data-filter="2" aria-selected="false">Membres asso</button>
+          <button role="tab" data-filter="3" aria-selected="false">Prés. club</button>
+          <button role="tab" data-filter="4" aria-selected="false">Membres club</button>
+        </div>
+      </header>
+
+      <form class="panel composer" id="composer" data-reveal style="--d:.35s">
+        <span class="avatar" data-me-initials>MS</span>
+        <div class="composer-main">
+          <label for="composer-text" class="sr-only">Nouvelle publication</label>
+          <textarea id="composer-text" rows="1" placeholder="Partagez une annonce, un événement, une idée…"></textarea>
+          <div class="composer-foot">
+            <div class="composer-tools">
+              <button type="button" class="icon-btn" title="Image" aria-label="Ajouter une image"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg></button>
+              <button type="button" class="icon-btn" title="Événement" aria-label="Ajouter un événement"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></button>
+              <select id="composer-role" aria-label="Visible par quel rôle">
+                <option value="0">Tous les rôles</option>
+              </select>
+              <select id="composer-club" aria-label="Visible par quel club">
+                <option value="0">Tous les clubs</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-primary btn-sm" id="composer-submit" disabled>Publier</button>
+          </div>
+        </div>
+      </form>
+
+      <div class="posts" id="posts" aria-live="polite"></div>
+    </main>
+
+    <!-- ===== RIGHT ===== -->
+    <aside class="side side--right">
+      <section class="panel side-block" data-reveal style="--d:.15s">
+        <div class="side-title"><h4>À venir</h4><a href="#">Calendrier</a></div>
+        <div id="events"></div>
+      </section>
+
+      <section class="panel side-block" data-reveal style="--d:.25s">
+        <div class="side-title"><h4>Personnes à connaître</h4></div>
+        <div id="suggestions"></div>
+      </section>
+
+      <section class="promo" data-reveal style="--d:.35s">
+        <h4>Vos amis sont <span class="hl">en ligne</span>.</h4>
+        <p>Reprenez la conversation là où vous l'avez laissée.</p>
+        <a href="conversations.html" class="btn btn-white btn-sm" data-magnetic>Ouvrir les messages</a>
+      </section>
+    </aside>
+  </div>
+
+  <!-- ===== MOBILE TABBAR ===== -->
+  <nav class="tabbar" aria-label="Navigation mobile">
+    <a href="feed.html" class="is-active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5L12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg><span>Feed</span></a>
+    <a href="conversations.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 21l1.9-5.4A8 8 0 1 1 21 12z"/></svg><span>Messages</span><i class="dot-badge"></i></a>
+    <a href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1"/></svg><span>Profil</span></a>
+  </nav>
+
+  <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
+  <script src="assets/js/core.js"></script>
+  <script src="assets/js/services/api.js"></script>
+  <script src="assets/js/services/auth.service.js"></script>
+  <script src="assets/js/services/realtime.service.js"></script>
+  <script src="assets/js/data/mock.js"></script>
+  <script src="assets/js/session.js"></script>
+  <script src="assets/js/notifications.js"></script>
+  <script src="assets/js/feed.js"></script>
+</body>
+</html>

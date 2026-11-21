@@ -3,6 +3,7 @@ package com.sos.club.chat;
 import com.sos.club.chat.ChatDtos.*;
 import com.sos.club.security.AuthUser;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -51,6 +52,20 @@ public class ChatController {
     public MessageDto send(@AuthenticationPrincipal AuthUser me, @PathVariable int id,
                            @Validated @RequestBody SendMessageRequest r) {
         return chat.send(me.id(), id, r.content());
+    }
+
+    /** Modifier son propre message. */
+    @PutMapping("/{id}/messages/{messageId}")
+    public MessageDto edit(@AuthenticationPrincipal AuthUser me, @PathVariable int id, @PathVariable int messageId,
+                           @Validated @RequestBody EditMessageRequest r) {
+        return chat.edit(me.id(), id, messageId, r.content());
+    }
+
+    /** Supprimer son propre message. */
+    @DeleteMapping("/{id}/messages/{messageId}")
+    public ResponseEntity<Void> delete(@AuthenticationPrincipal AuthUser me, @PathVariable int id, @PathVariable int messageId) {
+        chat.delete(me.id(), id, messageId);
+        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{id}/read")

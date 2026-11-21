@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Messages — SOS Network</title>
+  <meta name="description" content="Vos conversations privées en temps réel." />
+  <meta name="theme-color" content="#EFFAFF" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <link rel="stylesheet" href="assets/css/app.css" />
+  <link rel="stylesheet" href="assets/css/chat.css" />
+</head>
+<body class="app chat-page">
+
+  <!-- ===== NAV ===== -->
+  <header class="nav nav--solid" aria-label="Navigation principale">
+    <a href="index.html" class="logo"><span class="logo-mark"></span>SOS Network</a>
+    <nav class="nav-links">
+      <span class="nav-indicator" aria-hidden="true"></span>
+      <a href="feed.html">Feed</a>
+      <a href="conversations.html" class="is-active" aria-current="page">Messages<span class="badge" data-unread>3</span></a>
+    </nav>
+    <div class="nav-actions">
+      <button class="me-btn" id="btn-logout" title="Se déconnecter">
+        <span class="me-name" data-me-first>Mehdi</span>
+        <span class="avatar" data-me-initials>MS</span>
+      </button>
+    </div>
+  </header>
+
+  <div class="chat-layout" id="chat-layout">
+    <!-- ===== Conversations list ===== -->
+    <aside class="panel conv-side" aria-label="Conversations">
+      <div class="conv-side-head">
+        <h1>Messages<span class="dot">.</span></h1>
+        <button class="icon-btn" id="btn-new" aria-expanded="false" aria-controls="friends-panel" title="Nouvelle conversation">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+        </button>
+      </div>
+
+      <div class="friends-panel" id="friends-panel">
+        <div><div class="friends-inner">
+          <p>Démarrer avec un ami</p>
+          <div class="friends-row" id="friends-row"></div>
+        </div></div>
+      </div>
+
+      <label class="conv-search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+        <span class="sr-only">Rechercher un ami</span>
+        <input type="search" id="conv-search" placeholder="Rechercher un ami…" />
+      </label>
+
+      <div class="conv-list" id="conv-list" role="list"></div>
+    </aside>
+
+    <!-- ===== Thread ===== -->
+    <section class="panel thread" id="thread" aria-live="polite">
+      <div class="thread-empty" id="thread-empty">
+        <div class="orbit" aria-hidden="true"><span></span><b></b><i></i></div>
+        <h2>Vos conversations<span class="dot">.</span></h2>
+        <p>Choisissez une conversation ou démarrez-en une nouvelle avec un ami.</p>
+      </div>
+    </section>
+  </div>
+
+  <!-- ===== MOBILE TABBAR ===== -->
+  <nav class="tabbar" aria-label="Navigation mobile">
+    <a href="feed.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5L12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg><span>Feed</span></a>
+    <a href="conversations.html" class="is-active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 21l1.9-5.4A8 8 0 1 1 21 12z"/></svg><span>Messages</span></a>
+    <a href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1"/></svg><span>Profil</span></a>
+  </nav>
+
+  <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
+  <script src="assets/js/core.js"></script>
+  <script src="assets/js/services/api.js"></script>
+  <script src="assets/js/services/auth.service.js"></script>
+  <script src="assets/js/services/realtime.service.js"></script>
+  <script src="assets/js/session.js"></script>
+  <script src="assets/js/notifications.js"></script>
+  <script src="assets/js/services/chat.service.js"></script>
+  <script src="assets/js/chat.js"></script>
+</body>
+</html>

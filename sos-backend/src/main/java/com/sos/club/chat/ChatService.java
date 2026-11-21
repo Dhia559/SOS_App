@@ -142,6 +142,33 @@ public class ChatService {
         return msg;
     }
 
+    /** Message de la conversation dont "me" est l'auteur (404 sinon, 403 si c'est celui de l'autre). */
+    private MessageDto ownMessage(int me, int conversationId, int messageId) {
+        membership(me, conversationId);
+        MessageDto msg = jdbc.query("SELECT * FROM messages WHERE id = :m AND conversation_id = :c",
+                        Map.of("m", messageId, "c", conversationId), MSG)
+                .stream().findFirst().orElseThrow(() -> ApiException.notFound("Message introuvable"));
+        if (msg.senderId() != me) throw ApiException.forbidden("Seul l'auteur peut modifier ou supprimer ce message");
+        return msg;
+    }
+
+    @Transactional
+    public MessageDto edit(int me, int conversationId, int messageId, String content) {
+        if (content == null || content.isBlank()) throw ApiException.badRequest("Message vide");
+        ownMessage(me, conversationId, messageId);
+        MessageDto msg = jdbc.queryForObject("UPDATE messages SET content = :content WHERE id = :m RETURNING *",
+                Map.of("m", messageId, "content", content.strip()), MSG);
+        publisher.publishEvent(new MessageUpdated(msg, membership(me, conversationId).other(me)));
+        return msg;
+    }
+
+    @Transactional
+    public void delete(int me, int conversationId, int messageId) {
+        ownMessage(me, conversationId, messageId);
+        jdbc.update("DELETE FROM messages WHERE id = :m", Map.of("m", messageId));
+        publisher.publishEvent(new MessageDeleted(conversationId, messageId, me, membership(me, conversationId).other(me)));
+    }
+
     /** Marque comme lus les messages recus dans la conversation. */
     @Transactional
     public int markRead(int me, int conversationId) {
