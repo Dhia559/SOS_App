@@ -1,0 +1,33 @@
+# Les valeurs sensibles viennent du fichier .env a la racine du projet
+# (lance l'appli depuis la racine : mvn spring-boot:run).
+spring:
+  application:
+    name: sos-backend
+  config:
+    import: optional:file:.env[.properties]
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:sos_club}
+    username: ${DB_USER:postgres}
+    password: ${DB_PASSWORD:}
+    hikari:
+      maximum-pool-size: 10
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+
+server:
+  port: ${SERVER_PORT:8080}
+
+app:
+  jwt:
+    secret: ${JWT_SECRET:dev-secret-change-me-please-make-it-long-enough}
+    expiration-hours: ${JWT_EXPIRATION_HOURS:24}
+  events:
+    poll-interval-ms: ${EVENTS_POLL_INTERVAL_MS:2000}
+    batch-size: 100
+    max-attempts: 5
+  dev-endpoints-enabled: ${DEV_ENDPOINTS:true}
+
+logging:
+  level:
+    com.sos.club: INFO

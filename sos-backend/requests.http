@@ -1,0 +1,94 @@
+### Requetes de test (VS Code "REST Client" ou IntelliJ HTTP Client)
+@base = http://localhost:8080
+@token = COLLE_LE_TOKEN_ICI
+
+### 0. (dev) mettre "password123" a tous les users du seed
+POST {{base}}/api/dev/reset-passwords
+Content-Type: application/json
+
+{ "password": "password123" }
+
+### 1. Login (user 1 du seed)
+POST {{base}}/api/auth/login
+Content-Type: application/json
+
+{ "email": "amine.bensalah@example.com", "password": "password123" }
+
+### 2. Register
+POST {{base}}/api/auth/register
+Content-Type: application/json
+
+{ "firstName": "Test", "lastName": "User", "email": "test@example.com", "password": "secret123",
+  "sex": "M", "roleId": 4, "clubId": 1 }
+
+### Moi
+GET {{base}}/api/users/me
+Authorization: Bearer {{token}}
+
+### Roles / clubs (id 0 = ALL)
+GET {{base}}/api/roles
+
+### Feed
+GET {{base}}/api/feed?limit=10
+Authorization: Bearer {{token}}
+
+### Creer un post (visible par tout le monde)
+POST {{base}}/api/posts
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "content": "Reunion SOS samedi 10h !", "visibleRoleId": 0, "visibleClubId": 1 }
+
+### Like
+POST {{base}}/api/posts/1/like
+Authorization: Bearer {{token}}
+
+### Commenter
+POST {{base}}/api/posts/1/comments
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "content": "Je serai la" }
+
+### Commentaires d'un post
+GET {{base}}/api/posts/1/comments
+Authorization: Bearer {{token}}
+
+### Amis
+GET {{base}}/api/friends
+Authorization: Bearer {{token}}
+
+### Demande d'ami au user 5
+POST {{base}}/api/friends/5
+Authorization: Bearer {{token}}
+
+### Demandes recues
+GET {{base}}/api/friends/requests
+Authorization: Bearer {{token}}
+
+### Conversations
+GET {{base}}/api/conversations
+Authorization: Bearer {{token}}
+
+### Ouvrir une conversation avec un ami (user 2)
+POST {{base}}/api/conversations/with/2
+Authorization: Bearer {{token}}
+
+### Envoyer un message
+POST {{base}}/api/conversations/1/messages
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "content": "Salut !" }
+
+### Notifications
+GET {{base}}/api/notifications
+Authorization: Bearer {{token}}
+
+### Nb non vues
+GET {{base}}/api/notifications/unseen-count
+Authorization: Bearer {{token}}
+
+### File d'events (debug)
+GET {{base}}/api/internal/events?limit=20
+Authorization: Bearer {{token}}
