@@ -80,10 +80,31 @@
         <div class="composer-main">
           <label for="composer-text" class="sr-only">Nouvelle publication</label>
           <textarea id="composer-text" rows="1" placeholder="Partagez une annonce, un événement, une idée…"></textarea>
+
+          <!-- Photo attached to the post -->
+          <div class="composer-photo" id="composer-photo" hidden>
+            <img id="composer-photo-img" alt="Aperçu de la photo" />
+            <button type="button" class="composer-remove" id="composer-photo-remove" aria-label="Retirer la photo">×</button>
+          </div>
+          <input type="file" id="composer-file" accept="image/jpeg,image/png,image/webp,image/gif" hidden />
+
+          <!-- Event attached to the post -->
+          <div class="composer-event" id="composer-event" hidden>
+            <div class="composer-event-head">
+              <strong>📅 Événement</strong>
+              <button type="button" id="composer-event-remove">Retirer</button>
+            </div>
+            <input type="text" id="event-title" maxlength="150" placeholder="Titre de l'événement" aria-label="Titre de l'événement" />
+            <div class="composer-event-row">
+              <input type="datetime-local" id="event-date" aria-label="Date et heure" />
+              <input type="text" id="event-place" maxlength="150" placeholder="Lieu (optionnel)" aria-label="Lieu" />
+            </div>
+          </div>
+
           <div class="composer-foot">
             <div class="composer-tools">
-              <button type="button" class="icon-btn" title="Image" aria-label="Ajouter une image"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg></button>
-              <button type="button" class="icon-btn" title="Événement" aria-label="Ajouter un événement"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></button>
+              <button type="button" class="icon-btn" id="btn-photo" title="Photo" aria-label="Ajouter une photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg></button>
+              <button type="button" class="icon-btn" id="btn-event" title="Événement" aria-label="Ajouter un événement" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></button>
               <select id="composer-role" aria-label="Visible par quel rôle">
                 <option value="0">Tous les rôles</option>
               </select>
@@ -102,7 +123,7 @@
     <!-- ===== RIGHT ===== -->
     <aside class="side side--right">
       <section class="panel side-block" data-reveal style="--d:.15s">
-        <div class="side-title"><h4>À venir</h4><a href="#">Calendrier</a></div>
+        <div class="side-title"><h4>À venir</h4></div>
         <div id="events"></div>
       </section>
 
@@ -136,7 +157,6 @@
   <script src="assets/js/services/api.js"></script>
   <script src="assets/js/services/auth.service.js"></script>
   <script src="assets/js/services/realtime.service.js"></script>
-  <script src="assets/js/data/mock.js"></script>
   <script src="assets/js/session.js"></script>
   <script src="assets/js/notifications.js"></script>
   <script src="assets/js/feed.js"></script>

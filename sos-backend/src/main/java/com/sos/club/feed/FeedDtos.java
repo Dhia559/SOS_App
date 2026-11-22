@@ -20,7 +20,15 @@ public final class FeedDtos {
             OffsetDateTime createdAt,
             long likeCount,
             long commentCount,
-            boolean likedByMe) {}
+            boolean likedByMe,
+            boolean hasImage,
+            PostEvent event) {}
+
+    /** Evenement attache a un post (icone calendrier). null si le post n'en a pas. */
+    public record PostEvent(String title, OffsetDateTime startsAt, String place) {}
+
+    /** Ligne du panneau "A venir". */
+    public record UpcomingEvent(int postId, String title, OffsetDateTime startsAt, String place, UserSummary author) {}
 
     public record CommentDto(int id, int postId, UserSummary author, String content, OffsetDateTime createdAt) {}
 
@@ -28,8 +36,19 @@ public final class FeedDtos {
 
     public record LikerDto(UserSummary user, OffsetDateTime likedAt) {}
 
-    /** visibleRoleId / visibleClubId : 0 ou absent = tout le monde. */
-    public record CreatePostRequest(@NotBlank @Size(max = 5000) String content, Integer visibleRoleId, Integer visibleClubId) {}
+    /**
+     * visibleRoleId / visibleClubId : 0 ou absent = tout le monde.
+     * image : data URL optionnelle ("data:image/jpeg;base64,..."), 5 Mo max.
+     * eventTitle + eventStartsAt (+ eventPlace) : evenement optionnel.
+     */
+    public record CreatePostRequest(
+            @NotBlank @Size(max = 5000) String content,
+            Integer visibleRoleId,
+            Integer visibleClubId,
+            String image,
+            @Size(max = 150) String eventTitle,
+            OffsetDateTime eventStartsAt,
+            @Size(max = 150) String eventPlace) {}
 
     public record UpdatePostRequest(@NotBlank @Size(max = 5000) String content) {}
 

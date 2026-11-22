@@ -80,7 +80,9 @@ Header `Authorization: Bearer <token>` sur toutes les routes sauf `/api/auth/**`
 | Methode | URL | Notes |
 |---|---|---|
 | GET | /api/feed?before=&limit= | `{posts, nextBefore}` ; page suivante : `before=nextBefore` (URL-encoder le `+` du fuseau) |
-| POST | /api/posts | `{content, visibleRoleId?, visibleClubId?}` (0/absent = tous) → event post.created |
+| POST | /api/posts | `{content, visibleRoleId?, visibleClubId?, image?, eventTitle?, eventStartsAt?, eventPlace?}` (0/absent = tous ; `image` = data URL, 5 Mo max ; titre + date ensemble) → event post.created |
+| GET | /api/posts/{id}/image | photo du post (meme visibilite que le post) |
+| GET | /api/feed/events?limit= | evenements a venir des posts visibles (panneau « A venir ») |
 | GET / PUT / DELETE | /api/posts/{id} | PUT/DELETE : auteur seulement |
 | POST / DELETE | /api/posts/{id}/like | → `{postId, liked, likeCount}` ; POST → event like.created |
 | GET | /api/posts/{id}/likes | qui a aime |

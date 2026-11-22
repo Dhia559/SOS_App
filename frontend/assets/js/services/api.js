@@ -40,9 +40,18 @@ const Api = (() => {
     return data;
   }
 
+  /** Binary resource (e.g. a post photo) as a Blob, with the auth header. */
+  async function blob(path) {
+    const token = AuthService.getToken();
+    const res = await fetch(API_URL + path, { headers: token ? { Authorization: 'Bearer ' + token } : {} });
+    if (!res.ok) throw Object.assign(new Error(`Erreur ${res.status}`), { status: res.status });
+    return res.blob();
+  }
+
   return {
     API_URL,
     WS_URL,
+    blob,
     get: (p) => request('GET', p),
     post: (p, b) => request('POST', p, b),
     put: (p, b) => request('PUT', p, b),

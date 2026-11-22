@@ -2,7 +2,9 @@ package com.sos.club.feed;
 
 import com.sos.club.feed.FeedDtos.*;
 import com.sos.club.security.AuthUser;
+import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
@@ -25,6 +27,23 @@ public class PostController {
                          @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) OffsetDateTime before,
                          @RequestParam(defaultValue = "20") int limit) {
         return posts.feed(me.id(), before, limit);
+    }
+
+    /** Evenements a venir (posts avec date) visibles par l'utilisateur. */
+    @GetMapping("/feed/events")
+    public List<UpcomingEvent> upcomingEvents(@AuthenticationPrincipal AuthUser me,
+                                              @RequestParam(defaultValue = "5") int limit) {
+        return posts.upcomingEvents(me.id(), limit);
+    }
+
+    /** Photo d'un post (meme regle de visibilite que le post). */
+    @GetMapping("/posts/{id}/image")
+    public ResponseEntity<byte[]> image(@AuthenticationPrincipal AuthUser me, @PathVariable int id) {
+        PostService.PostImage img = posts.image(me.id(), id);
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(img.contentType()))
+                .cacheControl(CacheControl.maxAge(java.time.Duration.ofHours(1)).cachePrivate())
+                .body(img.data());
     }
 
     @PostMapping("/posts")

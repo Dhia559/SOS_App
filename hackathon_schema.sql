@@ -62,8 +62,28 @@ CREATE TABLE posts (
   content          TEXT NOT NULL,
   visible_role_id  INT NOT NULL DEFAULT 0 REFERENCES roles(id),
   visible_club_id  INT NOT NULL DEFAULT 0 REFERENCES clubs(id),
-  created_at       TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  created_at       TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+
+  -- Optional event attached to the post (calendar icon). All three or none.
+  event_title      VARCHAR(150),
+  event_starts_at  TIMESTAMPTZ,
+  event_place      VARCHAR(150),
+  CONSTRAINT chk_post_event
+    CHECK ((event_title IS NULL) = (event_starts_at IS NULL))
 );
+
+-- Optional photo attached to a post (one per post), kept out of `posts`
+-- so the feed query stays light; served by GET /api/posts/{id}/image.
+CREATE TABLE post_images (
+  post_id       INT PRIMARY KEY REFERENCES posts(id) ON DELETE CASCADE,
+  content_type  VARCHAR(50) NOT NULL,
+  data          BYTEA NOT NULL,
+  created_at    TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- "À venir" panel: upcoming events.
+CREATE INDEX idx_posts_event_starts_at
+  ON posts(event_starts_at) WHERE event_starts_at IS NOT NULL;
 CREATE TABLE device_tokens (
     id SERIAL PRIMARY KEY,
     user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,

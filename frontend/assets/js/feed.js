@@ -48,6 +48,8 @@
       commentCount: p.commentCount,
       comments: null, // loaded when the comments panel is opened
       mine: author.id === me.id,
+      hasImage: p.hasImage,
+      event: p.event, // { title, startsAt, place } or null
     };
   }
 
@@ -79,6 +81,8 @@
         ${p.mine ? `<button class="icon-btn" data-action="delete" aria-label="Supprimer la publication">${ICON.trash}</button>` : ''}
       </header>
       <p class="post-text">${escapeHTML(p.text)}</p>
+      ${p.event ? eventHTML(p.event) : ''}
+      ${p.hasImage ? `<div class="post-visual pv-photo" data-photo="${p.id}"></div>` : ''}
       <div class="post-stats"><span data-likes>${p.likes} j'aime</span><span data-ccount>${countLabel(p.commentCount)}</span></div>
       <div class="post-actions">
         <button class="act ${p.liked ? 'is-liked' : ''}" data-action="like" aria-pressed="${p.liked}">${ICON.heart}<span>J'aime</span></button>
@@ -96,6 +100,31 @@
     </article>`;
   }
 
+  /* ---------- Event card + photos ---------- */
+  function eventHTML(ev) {
+    const d = new Date(ev.startsAt);
+    const day = d.toLocaleDateString('fr-FR', { weekday: 'short', day: '2-digit', month: 'short' }).toUpperCase();
+    const time = d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+    return `<div class="post-visual pv-event">
+      <span class="pv-date">${escapeHTML(day)} · ${time}</span>
+      <div><h3>${escapeHTML(ev.title)}</h3>${ev.place ? `<span class="pv-place">📍 ${escapeHTML(ev.place)}</span>` : ''}</div>
+    </div>`;
+  }
+
+  // Photos need the auth header, so they're fetched as blobs (cached per post)
+  const photoUrls = new Map();
+  function loadPhotos(root) {
+    $$('[data-photo]', root).forEach(async (box) => {
+      const id = box.dataset.photo;
+      try {
+        if (!photoUrls.has(id)) photoUrls.set(id, URL.createObjectURL(await Api.blob(`/posts/${id}/image`)));
+        box.innerHTML = `<img src="${photoUrls.get(id)}" alt="Photo de la publication" loading="lazy" />`;
+      } catch (_) {
+        box.remove();
+      }
+    });
+  }
+
   function renderPosts() {
     const list = posts.filter((p) =>
       (filter === 'all' || p.author.roleId === Number(filter)) &&
@@ -107,6 +136,7 @@
       : '<div class="panel empty">Aucune publication ne correspond.</div>')
       + (nextBefore ? '<button class="btn btn-white btn-block" id="load-more" type="button">Voir plus</button>' : '');
     observeReveals(root);
+    loadPhotos(root);
   }
 
   async function loadFeed(more = false) {
@@ -140,11 +170,7 @@
         </div>`
       : '<small>Aucun club.</small>';
 
-    $('#events').innerHTML = MockData.EVENTS.map((e) => `
-      <div class="event-row">
-        <div class="event-date"><b>${e.day}</b><small>${e.month}</small></div>
-        <div><strong>${escapeHTML(e.title)}</strong><small>${escapeHTML(e.club)}</small></div>
-      </div>`).join('');
+    loadUpcoming();
 
     try {
       const [friends, incoming, sent, myPosts] = await Promise.all([
@@ -165,6 +191,32 @@
       toast(err.message);
     }
     loadPeople();
+  }
+
+  /* ---------- "À venir": events attached to posts I can see ---------- */
+  async function loadUpcoming() {
+    try {
+      const events = await Api.get('/feed/events?limit=4');
+      $('#events').innerHTML = events.length ? events.map((e) => {
+        const d = new Date(e.startsAt);
+        const month = d.toLocaleDateString('fr-FR', { month: 'short' }).replace('.', '').toUpperCase();
+        const time = d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+        return `<div class="event-row" data-post="${e.postId}" title="Voir la publication">
+          <div class="event-date"><b>${String(d.getDate()).padStart(2, '0')}</b><small>${escapeHTML(month)}</small></div>
+          <div><strong>${escapeHTML(e.title)}</strong><small>${escapeHTML([time, e.place].filter(Boolean).join(' · '))}</small></div>
+        </div>`;
+      }).join('') : '<small>Aucun événement à venir. Ajoutez-en un avec l\'icône 📅.</small>';
+    } catch (err) {
+      $('#events').innerHTML = `<small>${escapeHTML(err.message)}</small>`;
+    }
+  }
+
+  function onUpcomingClick(e) {
+    const row = e.target.closest('[data-post]');
+    if (!row) return;
+    const post = $(`.post[data-id="${row.dataset.post}"]`);
+    if (post) post.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'center' });
+    else toast('Publication plus ancienne : faites défiler le feed');
   }
 
   /* ---------- People: every member, searchable ---------- */
@@ -350,26 +402,107 @@
     } catch (_) { /* keep the "everyone" defaults from the HTML */ }
   }
 
+  /** Resize in the browser (max 1600px, JPEG) so uploads stay small. */
+  function resizeImage(file, max = 1600) {
+    return new Promise((resolve, reject) => {
+      const url = URL.createObjectURL(file);
+      const img = new Image();
+      img.onload = () => {
+        const scale = Math.min(1, max / Math.max(img.width, img.height));
+        const canvas = document.createElement('canvas');
+        canvas.width = Math.round(img.width * scale);
+        canvas.height = Math.round(img.height * scale);
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#fff'; // transparent PNGs get a white background
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        URL.revokeObjectURL(url);
+        resolve(canvas.toDataURL('image/jpeg', 0.85));
+      };
+      img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('Image illisible')); };
+      img.src = url;
+    });
+  }
+
   function initComposer() {
     const form = $('#composer');
     const ta = $('#composer-text');
     const submit = $('#composer-submit');
+    const fileInput = $('#composer-file');
+    const photoBox = $('#composer-photo');
+    const eventBox = $('#composer-event');
+    const btnPhoto = $('#btn-photo');
+    const btnEvent = $('#btn-event');
+    let photo = null; // data URL
+
     const grow = () => { ta.style.height = 'auto'; ta.style.height = ta.scrollHeight + 'px'; };
     ta.addEventListener('focus', () => form.classList.add('is-open'));
     ta.addEventListener('input', () => { grow(); submit.disabled = !ta.value.trim(); });
+
+    /* Photo */
+    function setPhoto(dataUrl) {
+      photo = dataUrl;
+      photoBox.hidden = !photo;
+      $('#composer-photo-img').src = photo || '';
+      btnPhoto.classList.toggle('is-on', !!photo);
+    }
+    btnPhoto.addEventListener('click', () => fileInput.click());
+    fileInput.addEventListener('change', async () => {
+      const file = fileInput.files[0];
+      fileInput.value = '';
+      if (!file) return;
+      if (!file.type.startsWith('image/')) return toast('Choisissez une image');
+      if (file.size > 20 * 1024 * 1024) return toast('Image trop lourde (20 Mo max)');
+      try {
+        setPhoto(await resizeImage(file));
+        form.classList.add('is-open');
+      } catch (err) { toast(err.message); }
+    });
+    $('#composer-photo-remove').addEventListener('click', () => setPhoto(null));
+
+    /* Event */
+    function setEvent(open) {
+      eventBox.hidden = !open;
+      btnEvent.classList.toggle('is-on', open);
+      btnEvent.setAttribute('aria-pressed', String(open));
+      if (open) { form.classList.add('is-open'); $('#event-title').focus(); }
+      else ['#event-title', '#event-date', '#event-place'].forEach((s) => ($(s).value = ''));
+    }
+    btnEvent.addEventListener('click', () => setEvent(eventBox.hidden));
+    $('#composer-event-remove').addEventListener('click', () => setEvent(false));
+
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       const text = ta.value.trim();
       if (!text) return;
+
+      const event = eventBox.hidden ? null : {
+        title: $('#event-title').value.trim(),
+        date: $('#event-date').value,
+        place: $('#event-place').value.trim(),
+      };
+      if (event && (!event.title || !event.date)) {
+        toast("Ajoutez un titre et une date à l'événement");
+        (event.title ? $('#event-date') : $('#event-title')).focus();
+        return;
+      }
+
       submit.disabled = true;
       try {
         const p = await Api.post('/posts', {
           content: text,
           visibleRoleId: Number($('#composer-role').value),
           visibleClubId: Number($('#composer-club').value),
+          image: photo,
+          eventTitle: event?.title || null,
+          eventStartsAt: event ? new Date(event.date).toISOString() : null,
+          eventPlace: event?.place || null,
         });
         posts.unshift(toPost(p));
         ta.value = ''; grow(); form.classList.remove('is-open');
+        setPhoto(null);
+        setEvent(false);
+        if (p.event) loadUpcoming();
         renderPosts();
         const n = $('#stat-posts');
         if (/^\d+$/.test(n.textContent)) n.textContent = Number(n.textContent) + 1;
@@ -401,6 +534,7 @@
     $('#posts').addEventListener('click', onPostClick);
     $('#posts').addEventListener('submit', onCommentSubmit);
     $('#suggestions').addEventListener('click', onSuggestionClick);
+    $('#events').addEventListener('click', onUpcomingClick);
     initPeopleSearch();
   });
 })();

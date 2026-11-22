@@ -41,6 +41,8 @@ public class PostService {
 
     private static final String POST_SELECT = """
             SELECT p.id, p.content, p.visible_role_id, p.visible_club_id, p.created_at,
+                   p.event_title, p.event_starts_at, p.event_place,
+                   EXISTS (SELECT 1 FROM post_images pi WHERE pi.post_id = p.id) AS has_image,
                    vr.name AS visible_role_name, vc.name AS visible_club_name,
                    a.id AS a_id, a.first_name AS a_first_name, a.last_name AS a_last_name,
                    ar.name AS a_role_name, ac.name AS a_club_name,
@@ -67,7 +69,19 @@ public class PostService {
             rs.getObject("created_at", OffsetDateTime.class),
             rs.getLong("like_count"),
             rs.getLong("comment_count"),
-            rs.getBoolean("liked_by_me"));
+            rs.getBoolean("liked_by_me"),
+            rs.getBoolean("has_image"),
+            rs.getString("event_title") == null ? null : new PostEvent(
+                    rs.getString("event_title"),
+                    rs.getObject("event_starts_at", OffsetDateTime.class),
+                    rs.getString("event_place")));
+
+    /** Photo d'un post : type MIME + octets. */
+    public record PostImage(String contentType, byte[] data) {}
+
+    private static final int MAX_IMAGE_BYTES = 5 * 1024 * 1024;
+    private static final java.util.regex.Pattern DATA_URL =
+            java.util.regex.Pattern.compile("^data:(image/(?:jpeg|png|webp|gif));base64,(.+)$", java.util.regex.Pattern.DOTALL);
 
     private static final String COMMENT_SELECT = """
             SELECT c.id, c.post_id, c.content, c.created_at,
@@ -129,11 +143,28 @@ public class PostService {
         checkExists("roles", role, "Role cible inconnu");
         checkExists("clubs", club, "Club cible inconnu");
 
+        // Evenement : titre + date obligatoires ensemble, lieu optionnel
+        String eventTitle = blankToNull(r.eventTitle());
+        String eventPlace = blankToNull(r.eventPlace());
+        if ((eventTitle == null) != (r.eventStartsAt() == null)) {
+            throw ApiException.badRequest("Un evenement doit avoir un titre et une date");
+        }
+        if (eventTitle == null && eventPlace != null) throw ApiException.badRequest("Lieu sans evenement");
+        PostImage image = decodeImage(r.image());
+
         // 1) la donnee
         Integer postId = jdbc.queryForObject("""
-                INSERT INTO posts (user_id, content, visible_role_id, visible_club_id)
-                VALUES (:me, :content, :role, :club) RETURNING id
-                """, Map.of("me", me, "content", r.content().strip(), "role", role, "club", club), Integer.class);
+                INSERT INTO posts (user_id, content, visible_role_id, visible_club_id, event_title, event_starts_at, event_place)
+                VALUES (:me, :content, :role, :club, :et, :es, :ep) RETURNING id
+                """, new MapSqlParameterSource()
+                        .addValue("me", me).addValue("content", r.content().strip())
+                        .addValue("role", role).addValue("club", club)
+                        .addValue("et", eventTitle).addValue("es", r.eventStartsAt()).addValue("ep", eventPlace),
+                Integer.class);
+        if (image != null) {
+            jdbc.update("INSERT INTO post_images (post_id, content_type, data) VALUES (:p, :t, :d)",
+                    new MapSqlParameterSource().addValue("p", postId).addValue("t", image.contentType()).addValue("d", image.data()));
+        }
 
         // 2) l'event, meme transaction
         outbox.publish(EventTypes.POST_CREATED, Map.of("post_id", postId, "user_id", me));
@@ -220,6 +251,46 @@ public class PostService {
                 WHERE c.id = :id AND p.id = c.post_id AND (c.user_id = :me OR p.user_id = :me)
                 """, Map.of("id", commentId, "me", me));
         if (n == 0) throw ApiException.forbidden("Commentaire introuvable ou pas a vous");
+    }
+
+    // ------------------------------------------------------------------ photo & evenements
+
+    /** Photo d'un post visible par "me" (404 sinon). */
+    public PostImage image(int me, int postId) {
+        ensureVisible(me, postId);
+        return jdbc.query("SELECT content_type, data FROM post_images WHERE post_id = :p", Map.of("p", postId),
+                        (rs, i) -> new PostImage(rs.getString("content_type"), rs.getBytes("data")))
+                .stream().findFirst().orElseThrow(() -> ApiException.notFound("Pas de photo pour cette publication"));
+    }
+
+    /** Evenements a venir dans les posts visibles par "me" (panneau "A venir"). */
+    public List<UpcomingEvent> upcomingEvents(int me, int limit) {
+        return jdbc.query(POST_SELECT + " WHERE " + VISIBLE + """
+                         AND p.event_starts_at >= NOW()
+                        ORDER BY p.event_starts_at, p.id LIMIT :limit
+                        """,
+                new MapSqlParameterSource().addValue("me", me).addValue("limit", Math.min(Math.max(limit, 1), 20)),
+                (rs, i) -> new UpcomingEvent(rs.getInt("id"), rs.getString("event_title"),
+                        rs.getObject("event_starts_at", OffsetDateTime.class), rs.getString("event_place"),
+                        UserSummary.from(rs, "a_")));
+    }
+
+    private static PostImage decodeImage(String dataUrl) {
+        if (dataUrl == null || dataUrl.isBlank()) return null;
+        var m = DATA_URL.matcher(dataUrl);
+        if (!m.matches()) throw ApiException.badRequest("Image invalide (JPEG, PNG, WebP ou GIF attendu)");
+        byte[] bytes;
+        try {
+            bytes = java.util.Base64.getMimeDecoder().decode(m.group(2));
+        } catch (IllegalArgumentException e) {
+            throw ApiException.badRequest("Image invalide");
+        }
+        if (bytes.length > MAX_IMAGE_BYTES) throw ApiException.badRequest("Image trop lourde (5 Mo max)");
+        return new PostImage(m.group(1), bytes);
+    }
+
+    private static String blankToNull(String s) {
+        return s == null || s.isBlank() ? null : s.strip();
     }
 
     private void checkExists(String table, int id, String msg) {
